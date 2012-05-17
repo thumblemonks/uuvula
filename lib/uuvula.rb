@@ -6,7 +6,7 @@
 #
 # TODO: Add support for configurable UUID column name.
 # TODO: Refactor into a gem.
-module BetterUUID
+module Uuvula
   def self.included(mod)
     mod.extend(ClassMethods)
     class << mod
@@ -44,7 +44,7 @@ module BetterUUID
   def self.define_uuid_writer(mod, column_name)
     method_body = <<-EOF
       def #{column_name}=(value)
-        write_attribute('#{column_name}', BetterUUID.convert_uuid_to_raw(value))
+        write_attribute('#{column_name}', Uuvula.convert_uuid_to_raw(value))
       end
     EOF
     mod.send(:class_eval, method_body, __FILE__, __LINE__)
@@ -65,14 +65,14 @@ module BetterUUID
   module ClassMethods
     def uuid_column(column_name = :uuid)
       @uuid_column_name = column_name.to_sym
-      BetterUUID.define_uuid_reader(self, @uuid_column_name)
-      BetterUUID.define_uuid_writer(self, @uuid_column_name)
-      BetterUUID.define_callbacks(self, @uuid_column_name)
+      Uuvula.define_uuid_reader(self, @uuid_column_name)
+      Uuvula.define_uuid_writer(self, @uuid_column_name)
+      Uuvula.define_callbacks(self, @uuid_column_name)
     end
 
     def sanitize_sql_hash_for_conditions_with_uuid_support(attrs, table_name = quoted_table_name)
       if @uuid_column_name && attrs.has_key?(@uuid_column_name)
-        attrs[@uuid_column_name] = BetterUUID.convert_uuid_to_raw(attrs[@uuid_column_name])
+        attrs[@uuid_column_name] = Uuvula.convert_uuid_to_raw(attrs[@uuid_column_name])
       end
       sanitize_sql_hash_for_conditions_without_uuid_support(attrs, table_name)
     end
@@ -80,4 +80,4 @@ module BetterUUID
 end
 
 # TODO: leftover from before porting to a gem. Clean up.
-ActiveRecord::Base.send(:include, BetterUUID)
+ActiveRecord::Base.send(:include, Uuvula)
