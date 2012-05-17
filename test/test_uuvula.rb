@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TestBetterUUID < Test::Unit::TestCase
+class TestUuvula < Test::Unit::TestCase
   def setup
     @uuid = UUIDTools::UUID.timestamp_create
   end
