@@ -1,3 +1,4 @@
+require 'activerecord'
 # This module adds support for reading and writing UUIDs from
 # the database, assuming a BINARY(16) or VARBINARY(16) column UUID.
 #
